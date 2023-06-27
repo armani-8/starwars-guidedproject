@@ -27,34 +27,34 @@ async function getPlanet(id) {
 }
 
 async function fetchPlanet(id) {
-  let filmUrl = `${baseUrl}/films/${id}`;
-  return await fetch(filmUrl)
+  let planetUrl = `${baseUrl}/planets/${id}`;
+  return await fetch(planetUrl)
     .then(res => res.json())
 }
 
-async function fetchCharacters(film) {
-  const url = `${baseUrl}/films/${film?.id}/characters`;
+async function fetchCharacters([planet]) {
+  const url = `${baseUrl}/planets/${planet?.id}/characters`;
   const characters = await fetch(url)
     .then(res => res.json())
   return characters;
 }
 
-async function fetchPlanets(film) {
-  const url = `${baseUrl}/films/${film?.id}/planets`;
-  const planets = await fetch(url)
+async function fetchFilms(planet) {
+  const url = `${baseUrl}/planets/${[planet]?.id}/films`;
+  const films = await fetch(url)
     .then(res => res.json())
-  return planets;
+  return films;
 }
 
-const renderFilm = film => {
-  document.title = `SWAPI - ${film?.title}`;  // Just to make the browser tab say the film title
-  titleH1.textContent = film?.title;
-  directorSpan.textContent = film?.director;
-  releaseDateSpan.textContent = film?.release_date;
+const renderPlanet = planet => {
+  document.title = `SWAPI - ${homeworld?.id}`;  // Just to make the browser tab say the film title
+  titleH1.textContent = homeworld?.id;
+  charactersU1.textContent = homeworld?.characters;
+  filmsU1.textContent = homeworld?.films;
 
-  const characterLis = film?.characters?.map(character => `<li><a href="/character.html?id=${character.id}">${character.name}</li>`)
+  const characterLis = homeworld?.characters?.map(character => `<li><a href="/character.html?id=${character.id}">${character.name}</li>`)
   charactersUl.innerHTML = characterLis.join("");
 
-  const planetLis = film?.planets?.map(planet => `<li><a href="/planet.html?id=${planet.id}">${planet.name}</li>`)
-  planetsUl.innerHTML = planetLis.join("");
+  const filmLis = homeworld?.films?.map(film => `<li><a href="/film.html?id=${film.id}">${film.name}</li>`)
+  filmsUl.innerHTML = filmLis.join("");
 }
