@@ -24,7 +24,7 @@ async function getPlanet(id) {
   try {
     planet = await fetchPlanet(id)
     planet.characters = await fetchCharacters(id)
-    planet.films = await fetchFilm(id)
+    planet.films = await fetchFilms(id)
   }
   catch (ex) {
     console.error(`Error reading planet ${id} data.`, ex.message);
@@ -60,7 +60,7 @@ const renderPlanet = planet => {
   populationU1.textContent = planet?.population;
   charactersUl.textContent = planet?.characters;
   filmsUl.textContent = planet?.films;
-  
+
   const characterLis = planet?.characters?.map(character => `<li><a href="/character.html?id=${character.id}">${character.name}</li>`)
   charactersUl.innerHTML = characterLis.join("");
 
