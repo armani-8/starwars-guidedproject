@@ -21,10 +21,9 @@ async function getFilm(id) {
   let film;
   try {
     film = await fetchFilm(id)
-    film.characters = await fetchCharacters(film)
-    film.planets = await fetchPlanets(film)
-  }
-  catch (ex) {
+    film.characters = await fetchCharacters(id)
+    film.planets = await fetchPlanets(id)
+  } catch (ex) {
     console.error(`Error reading film ${id} data.`, ex.message);
   }
   renderFilm(film);
@@ -36,15 +35,15 @@ async function fetchFilm(id) {
     .then(res => res.json())
 }
 
-async function fetchCharacters(film) {
-  const url = `${baseUrl}/films/${film?.id}/characters`;
+async function fetchCharacters(id) {
+  const url = `${baseUrl}/films/${id}/characters`;
   const characters = await fetch(url)
     .then(res => res.json())
   return characters;
 }
 
-async function fetchPlanets(film) {
-  const url = `${baseUrl}/films/${film?.id}/planets`;
+async function fetchPlanets(id) {
+  const url = `${baseUrl}/films/${id}/planets`;
   const planets = await fetch(url)
     .then(res => res.json())
   return planets;
