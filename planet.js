@@ -7,10 +7,10 @@ let charactersUl;
 const baseUrl = `https://swapi2.azurewebsites.net/api`;
 
 addEventListener('DOMContentLoaded', () => {
-  planetH1 = document.querySelector('h1#title');
-  climateUl = document.querySelector('#climate>ul');
-  terrainUl = document.querySelector('#terrain>ul');
-  populationUl = document.querySelector('#population>ul');
+  planetH1 = document.querySelector('h1#planet');
+  climateU1 = document.querySelector('span#climate');
+  terrainU1 = document.querySelector('span#terrain');
+  populationU1 = document.querySelector('span#population');
   charactersUl = document.querySelector('#characters>ul');
   filmsUl = document.querySelector('#films>ul');
 
@@ -54,12 +54,12 @@ async function fetchFilms(id) {
 
 const renderPlanet = planet => {
   document.title = `SWAPI - ${planet?.name}`;  // Just to make the browser tab say the film title
-  titleH1.textContent = planet?.name;
+  planetH1.textContent = planet?.name;
   climateU1.textContent = planet?.climate;
   terrainU1.textContent = planet?.terrain;
   populationU1.textContent = planet?.population;
-  charactersU1.textContent = planet?.characters;
-  filmsU1.textContent = planet?.films;
+  charactersUl.textContent = planet?.characters;
+  filmsUl.textContent = planet?.films;
 
   const characterLis = planet?.characters?.map(character => `<li><a href="/character.html?id=${character.id}">${character.name}</li>`)
   charactersUl.innerHTML = characterLis.join("");
