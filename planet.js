@@ -1,64 +1,60 @@
-let nameH1;
-let birthYearSpan;
-let heightSpan;
-let massSpan;
-let filmsDiv;
-let planetDiv;
+let planetH1;
+let charactersUl;
+let filmsUl;
 const baseUrl = `https://swapi2.azurewebsites.net/api`;
 
-// Runs on page load
 addEventListener('DOMContentLoaded', () => {
-  nameH1 = document.querySelector('h1#name');
-  birthYearSpan = document.querySelector('span#birth_year');
-  massSpan = document.querySelector('span#mass');
-  heightSpan = document.querySelector('span#height');
-  homeworldSpan = document.querySelector('span#homeworld');
+  planetH1 = document.querySelector('h1#title');
+  charactersUl = document.querySelector('#characters>ul');
   filmsUl = document.querySelector('#films>ul');
+
   const sp = new URLSearchParams(window.location.search)
   const id = sp.get('id')
-  getCharacter(id)
+  getPlanet(id)
 });
 
-async function getCharacter(id) {
-  let character;
+async function getPlanet(id) {
+  let planet;
   try {
-    character = await fetchCharacter(id)
-    character.homeworld = await fetchHomeworld(character)
-    character.films = await fetchFilms(character)
+    planet = await fetchPlanet(id)
+    planet.characters = await fetchCharacters(planet)
+    planet.films = await fetchFilm(planet)
   }
   catch (ex) {
-    console.error(`Error reading character ${id} data.`, ex.message);
+    console.error(`Error reading planet ${id} data.`, ex.message);
   }
-  renderCharacter(character);
-
+  renderPlanet(planet);
 }
-async function fetchCharacter(id) {
-  let characterUrl = `${baseUrl}/characters/${id}`;
-  return await fetch(characterUrl)
+
+async function fetchPlanet(id) {
+  let filmUrl = `${baseUrl}/films/${id}`;
+  return await fetch(filmUrl)
     .then(res => res.json())
 }
 
-async function fetchHomeworld(character) {
-  const url = `${baseUrl}/planets/${character?.homeworld}`;
-  const planet = await fetch(url)
+async function fetchCharacters(film) {
+  const url = `${baseUrl}/films/${film?.id}/characters`;
+  const characters = await fetch(url)
     .then(res => res.json())
-  return planet;
+  return characters;
 }
 
-async function fetchFilms(character) {
-  const url = `${baseUrl}/characters/${character?.id}/films`;
-  const films = await fetch(url)
+async function fetchPlanets(film) {
+  const url = `${baseUrl}/films/${film?.id}/planets`;
+  const planets = await fetch(url)
     .then(res => res.json())
-  return films;
+  return planets;
 }
 
-const renderCharacter = character => {
-  document.title = `SWAPI - ${character?.name}`;  // Just to make the browser tab say their name
-  nameH1.textContent = character?.name;
-  heightSpan.textContent = character?.height;
-  massSpan.textContent = character?.mass;
-  birthYearSpan.textContent = character?.birth_year;
-  homeworldSpan.innerHTML = `<a href="/planet.html?id=${character?.homeworld.id}">${character?.homeworld.name}</a>`;
-  const filmsLis = character?.films?.map(film => `<li><a href="/film.html?id=${film.id}">${film.title}</li>`)
-  filmsUl.innerHTML = filmsLis.join("");
+const renderFilm = film => {
+  document.title = `SWAPI - ${film?.title}`;  // Just to make the browser tab say the film title
+  titleH1.textContent = film?.title;
+  directorSpan.textContent = film?.director;
+  releaseDateSpan.textContent = film?.release_date;
+
+  const characterLis = film?.characters?.map(character => `<li><a href="/character.html?id=${character.id}">${character.name}</li>`)
+  charactersUl.innerHTML = characterLis.join("");
+
+  const planetLis = film?.planets?.map(planet => `<li><a href="/planet.html?id=${planet.id}">${planet.name}</li>`)
+  planetsUl.innerHTML = planetLis.join("");
 }
